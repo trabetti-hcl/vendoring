@@ -53,14 +53,14 @@ def get_version_from_arguments(arguments: List[str]) -> Optional[str]:
 
 
 def perform_git_checks(session: nox.Session, version_tag: str) -> None:
-    # Ensure we're on master branch for cutting a release.
+    # Ensure we're on main branch for cutting a release.
     result = subprocess.run(
         ["git", "rev-parse", "--abbrev-ref", "HEAD"],
         capture_output=True,
         encoding="utf-8",
     )
-    if result.stdout != "master\n":
-        session.error(f"Not on master branch: {result.stdout!r}")
+    if result.stdout != "main\n":
+        session.error(f"Not on main branch: {result.stdout!r}")
 
     # Ensure there are no uncommitted changes.
     result = subprocess.run(
@@ -129,8 +129,8 @@ def release(session: nox.Session) -> None:
     files = glob(f"dist/{package_name}-{release_version}*")
     assert len(files) == 2
 
-    # Get back out into master
-    session.run("git", "checkout", "-q", "master", external=True)
+    # Get back out into main
+    session.run("git", "checkout", "-q", "main", external=True)
 
     # Check and upload distribution files
     session.run("twine", "check", *files)
@@ -139,4 +139,4 @@ def release(session: nox.Session) -> None:
     session.run("twine", "upload", *files)
 
     # Push the commits and tag
-    session.run("git", "push", "origin", "master", release_version, external=True)
+    session.run("git", "push", "origin", "main", release_version, external=True)
