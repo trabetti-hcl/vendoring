@@ -4,9 +4,3 @@ requirements = "vendored/vendor.txt"
 namespace = "protected_files.vendored"
 
 protected-files = ["README.md"]
-
-[tool.vendoring.transformations]
-drop = [
-    "*.dist-info",
-    "*.egg-info",
-]

@@ -4,9 +4,3 @@ requirements = "vendor.txt"
 namespace = "patches.vendored"
 
 patches-dir = "patches"
-
-[tool.vendoring.transformations]
-drop = [
-    "*.dist-info",
-    "*.egg-info",
-]

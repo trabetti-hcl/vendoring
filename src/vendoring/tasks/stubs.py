@@ -15,6 +15,9 @@ from vendoring.configuration import Configuration
 def determine_stub_files(
     lib: str, typing_stubs: Dict[str, List[str]]
 ) -> Iterable[Tuple[str, str]]:
+    if lib.endswith((".dist-info", ".egg-info")):
+        return  # Don't generate stubs for metadata directories.
+
     # There's no special handling needed -- a <libname>.pyi file is good enough
     if lib not in typing_stubs:
         yield lib + ".pyi", lib

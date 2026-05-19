@@ -38,7 +38,10 @@ def test_basic(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
 
     vendored = tmp_path / "vendored"
     assert vendored.exists()
-    assert sorted(os.listdir(vendored)) == ["packaging"]
+    assert sorted(os.listdir(vendored)) == [
+        "packaging",
+        "packaging-20.4.dist-info",
+    ]
 
     packaging = vendored / "packaging"
     assert packaging.exists()
@@ -72,6 +75,8 @@ def test_import_rewriting(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
     assert vendored.exists()
     assert sorted(os.listdir(vendored)) == [
         "packaging",
+        "packaging-20.4.dist-info",
+        "six-1.15.0.dist-info",
         "six.LICENSE",
         "six.py",
         "six.pyi",
@@ -101,14 +106,18 @@ def test_licenses(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     vendored = tmp_path / "vendored"
     assert vendored.exists()
     assert sorted(os.listdir(vendored)) == [
+        "appdirs-1.4.4.dist-info",
         "appdirs.LICENSE.txt",
         "appdirs.py",
         "appdirs.pyi",
+        "six-1.15.0.dist-info",
         "six.LICENSE",
         "six.py",
         "six.pyi",
         "tomli",
+        "tomli-1.2.1.dist-info",
         "webencodings",
+        "webencodings-0.5.1.dist-info",
         "webencodings.pyi",
     ]
 
@@ -130,6 +139,7 @@ def test_patches(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     vendored = tmp_path / "vendored"
     assert vendored.exists()
     assert sorted(os.listdir(vendored)) == [
+        "appdirs-1.4.4.dist-info",
         "appdirs.LICENSE.txt",
         "appdirs.py",
         "appdirs.pyi",
@@ -149,7 +159,12 @@ def test_protected_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Non
 
     vendored = tmp_path / "vendored"
     assert vendored.exists()
-    assert sorted(os.listdir(vendored)) == ["README.md", "packaging", "vendor.txt"]
+    assert sorted(os.listdir(vendored)) == [
+        "README.md",
+        "packaging",
+        "packaging-20.4.dist-info",
+        "vendor.txt",
+    ]
 
 
 def test_transformations(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -213,11 +228,14 @@ def test_typing_fun(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     vendored = tmp_path / "vendored"
     assert vendored.exists()
     assert sorted(os.listdir(vendored)) == [
+        "appdirs-1.4.4.dist-info",
         "appdirs.LICENSE.txt",
         "appdirs.py",
+        "contextlib2-0.6.0.post1.dist-info",
         "contextlib2.LICENSE.txt",
         "contextlib2.py",
         "six",
+        "six-1.15.0.dist-info",
         "six.LICENSE",
         "six.py",
     ]
@@ -240,10 +258,12 @@ def test_sbom(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     vendored = tmp_path / "vendored"
     assert vendored.exists()
     assert sorted(os.listdir(vendored)) == [
+        "appdirs-1.4.4.dist-info",
         "appdirs.LICENSE.txt",
         "appdirs.py",
         "appdirs.pyi",
         "bom.cdx.json",
+        "six-1.15.0.dist-info",
         "six.LICENSE",
         "six.py",
         "six.pyi",
