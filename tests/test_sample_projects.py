@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 from click.testing import CliRunner, Result
 
+from vendoring import __version__
 from vendoring.cli import main
 
 SAMPLE_PROJECTS = Path(__file__).parent / "sample-projects"
@@ -279,7 +280,7 @@ def test_sbom(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         ],
         "metadata": {
             "component": {"bom-ref": "bom-ref:sbom", "name": "sbom", "type": "library"},
-            "tools": [{"name": "vendoring", "version": "1.2.1.dev0"}],
+            "tools": [{"name": "vendoring", "version": __version__}],
         },
         "specVersion": "1.4",
         "version": 1,
