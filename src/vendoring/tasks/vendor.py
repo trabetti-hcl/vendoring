@@ -18,6 +18,7 @@ def download_libraries(requirements: Path, destination: Path) -> None:
         "pip",
         "install",
         "--only-binary=:all:",
+        "--uploaded-prior-to=P7D",
         "--platform",
         "any",
         "-t",
