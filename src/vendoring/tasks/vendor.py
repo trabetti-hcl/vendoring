@@ -27,6 +27,7 @@ def download_libraries(requirements: Path, destination: Path) -> None:
         # We use --no-deps because we want to ensure that dependencies are provided.
         # This includes all dependencies recursively up the chain.
         "--no-deps",
+        "--only-binary :all:"
     ]
     run(command, working_directory=None)
 
