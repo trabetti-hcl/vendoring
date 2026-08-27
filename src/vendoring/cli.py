@@ -20,6 +20,8 @@ class _Template(NamedTuple):
     package: _Param
     # Options
     verbose: _Param
+    # ignore_space_change
+    ignore_space_change: _Param
 
 
 template = _Template(
