@@ -17,7 +17,7 @@ def download_libraries(requirements: Path, destination: Path) -> None:
     command = [
         "pip",
         "install",
-        "--only-binary :all:",
+        "--only-binary=:all:",
         "--platform",
         "any",
         "-t",
