@@ -25,6 +25,7 @@ class _Template(NamedTuple):
 template = _Template(
     package=click.argument("package", default=None, required=False, type=str),
     verbose=click.option("-v", "--verbose", is_flag=True),
+    ignore_space_change=click.option("--ignore-space-change", is_flag=True, default=False)
 )
 
 
@@ -45,7 +46,7 @@ def sync(verbose: bool) -> None:
     try:
         with UI.task("Load configuration"):
             config = load_configuration(project_path)
-        run_sync(config)
+        run_sync(config, ignore_space_change)
     except VendoringError as e:
         UI.show_error(e)
         sys.exit(1)
