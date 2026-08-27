@@ -139,19 +139,20 @@ def detect_vendored_libs(destination: Path, files_to_skip: List[str]) -> List[st
     return retval
 
 
-def _apply_patch(patch_file_path: Path, working_directory: Path) -> None:
+def _apply_patch(patch_file_path: Path, working_directory: Path, ignore_space_change=False) -> None:
     run(
-        ["git", "apply", "--verbose", str(patch_file_path)],
+        ignore_space_change_flag = "--ignore-space-change" if ignore_space_change else ""
+        ["git", "apply", "--verbose", ignore_space_change_flag, str(patch_file_path)],
         working_directory=working_directory,
     )
 
 
-def apply_patches(patch_dir: Path, working_directory: Path) -> None:
+def apply_patches(patch_dir: Path, working_directory: Path, ignore_space_change=False) -> None:
     for patch in patch_dir.glob("*.patch"):
-        _apply_patch(patch, working_directory)
+        _apply_patch(patch, working_directory, ignore_space_change)
 
 
-def vendor_libraries(config: Configuration) -> List[str]:
+def vendor_libraries(config: Configuration, ignore_space_change=False) -> List[str]:
     destination = config.destination
 
     # Download the relevant libraries.
@@ -169,7 +170,7 @@ def vendor_libraries(config: Configuration) -> List[str]:
 
     # Apply user provided patches.
     if config.patches_dir:
-        apply_patches(config.patches_dir, working_directory=config.base_directory)
+        apply_patches(config.patches_dir, working_directory=config.base_directory, ignore_space_change=ignore_space_change)
 
     # Rewrite the imports we want changed.
     rewrite_imports(
