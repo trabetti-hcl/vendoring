@@ -17,6 +17,7 @@ def download_libraries(requirements: Path, destination: Path) -> None:
     command = [
         "pip",
         "install",
+        "--only-binary :all:",
         "--platform",
         "any",
         "-t",
@@ -26,8 +27,7 @@ def download_libraries(requirements: Path, destination: Path) -> None:
         "--no-compile",
         # We use --no-deps because we want to ensure that dependencies are provided.
         # This includes all dependencies recursively up the chain.
-        "--no-deps",
-        "--only-binary :all:"
+        "--no-deps"
     ]
     run(command, working_directory=None)
 
