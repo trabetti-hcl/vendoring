@@ -39,7 +39,7 @@ def main() -> None:
 @main.command()
 @template.verbose
 @template.ignore_space_change
-def sync(verbose: bool) -> None:
+def sync(verbose: bool, ignore_space_change:bool) -> None:
     """Vendor libraries as described in lockfile"""
     UI.verbose = verbose
     project_path = Path()
