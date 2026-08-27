@@ -141,11 +141,14 @@ def detect_vendored_libs(destination: Path, files_to_skip: List[str]) -> List[st
 
 
 def _apply_patch(patch_file_path: Path, working_directory: Path, ignore_space_change=False) -> None:
-    ignore_space_change_flag = "--ignore-space-change" if ignore_space_change else ""
-    run(
-        ["git", "apply", "--verbose", ignore_space_change_flag, str(patch_file_path)],
-        working_directory=working_directory,
-    )
+    command = ["git", "apply", "--verbose"]
+    
+    if ignore_space_change:
+        command.append("--ignore-space-change")
+        
+    command.append(str(patch_file_path))
+
+    run(command, working_directory=working_directory)
 
 
 def apply_patches(patch_dir: Path, working_directory: Path, ignore_space_change=False) -> None:
