@@ -22,8 +22,6 @@ class _Template(NamedTuple):
     verbose: _Param
     # ignore_space_change
     ignore_space_change: _Param
-    # secured
-    secured: _Param
 
 
 template = _Template(
@@ -34,12 +32,6 @@ template = _Template(
         is_flag=True,
         default=False,
         help="Ignore spaces when applying patches",
-    ),
-    secured=click.option(
-        "--secured",
-        is_flag=True,
-        default=False,
-        help="Use security-focused pip install flags (--only-binary=:all: and --uploaded-prior-to=P7D)",
     ),
 )
 
@@ -52,8 +44,7 @@ def main() -> None:
 @main.command()
 @template.verbose
 @template.ignore_space_change
-@template.secured
-def sync(verbose: bool, ignore_space_change: bool, secured: bool) -> None:
+def sync(verbose: bool, ignore_space_change: bool) -> None:
     """Vendor libraries as described in lockfile"""
     UI.verbose = verbose
     project_path = Path()
@@ -63,7 +54,7 @@ def sync(verbose: bool, ignore_space_change: bool, secured: bool) -> None:
     try:
         with UI.task("Load configuration"):
             config = load_configuration(project_path)
-        run_sync(config, ignore_space_change=ignore_space_change, secured=secured)
+        run_sync(config, ignore_space_change=ignore_space_change)
     except VendoringError as e:
         UI.show_error(e)
         sys.exit(1)

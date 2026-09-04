@@ -13,36 +13,21 @@ from vendoring.utils import remove_matching_regex as _remove_matching_regex
 from vendoring.utils import run
 
 
-def download_libraries(
-    requirements: Path, destination: Path, secured: bool = False
-) -> None:
+def download_libraries(requirements: Path, destination: Path) -> None:
     command = [
         "pip",
         "install",
+        "--platform",
+        "any",
+        "-t",
+        str(destination),
+        "-r",
+        str(requirements),
+        "--no-compile",
+        # We use --no-deps because we want to ensure that dependencies are provided.
+        # This includes all dependencies recursively up the chain.
+        "--no-deps",
     ]
-
-    if secured:
-        command.extend(
-            [
-                "--only-binary=:all:",
-                "--uploaded-prior-to=P7D",
-            ]
-        )
-
-    command.extend(
-        [
-            "--platform",
-            "any",
-            "-t",
-            str(destination),
-            "-r",
-            str(requirements),
-            "--no-compile",
-            # We use --no-deps because we want to ensure that dependencies are provided.
-            # This includes all dependencies recursively up the chain.
-            "--no-deps",
-        ]
-    )
     run(command, working_directory=None)
 
 
@@ -175,13 +160,12 @@ def apply_patches(
 
 
 def vendor_libraries(
-    config: Configuration, ignore_space_change: bool = False, secured: bool = False
+    config: Configuration, ignore_space_change: bool = False
 ) -> List[str]:
     destination = config.destination
 
     # Download the relevant libraries.
-    download_libraries(config.requirements, destination, secured=secured)
-
+    download_libraries(config.requirements, destination)
     # Generate an SBOM document for the requirements.
     if config.sbom_file:
         create_sbom_file(config.namespace, config.requirements, config.sbom_file)
