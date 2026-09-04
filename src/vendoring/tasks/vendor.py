@@ -13,12 +13,19 @@ from vendoring.utils import remove_matching_regex as _remove_matching_regex
 from vendoring.utils import run
 
 
-def download_libraries(requirements: Path, destination: Path) -> None:
+def download_libraries(requirements: Path, destination: Path, secured: bool = False) -> None:
     command = [
         "pip",
         "install",
-        "--only-binary=:all:",
-        "--uploaded-prior-to=P7D",
+    ]
+    
+    if secured:
+        command.extend([
+            "--only-binary=:all:",
+            "--uploaded-prior-to=P7D",
+        ])
+    
+    command.extend([
         "--platform",
         "any",
         "-t",
@@ -29,7 +36,7 @@ def download_libraries(requirements: Path, destination: Path) -> None:
         # We use --no-deps because we want to ensure that dependencies are provided.
         # This includes all dependencies recursively up the chain.
         "--no-deps"
-    ]
+    ])
     run(command, working_directory=None)
 
 
@@ -157,11 +164,11 @@ def apply_patches(patch_dir: Path, working_directory: Path, ignore_space_change=
         _apply_patch(patch, working_directory, ignore_space_change)
 
 
-def vendor_libraries(config: Configuration, ignore_space_change=False) -> List[str]:
+def vendor_libraries(config: Configuration, ignore_space_change: bool = False, secured: bool = False) -> List[str]:
     destination = config.destination
 
     # Download the relevant libraries.
-    download_libraries(config.requirements, destination)
+    download_libraries(config.requirements, destination, secured=secured)
 
     # Generate an SBOM document for the requirements.
     if config.sbom_file:
