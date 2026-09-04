@@ -13,30 +13,36 @@ from vendoring.utils import remove_matching_regex as _remove_matching_regex
 from vendoring.utils import run
 
 
-def download_libraries(requirements: Path, destination: Path, secured: bool = False) -> None:
+def download_libraries(
+    requirements: Path, destination: Path, secured: bool = False
+) -> None:
     command = [
         "pip",
         "install",
     ]
-    
+
     if secured:
-        command.extend([
-            "--only-binary=:all:",
-            "--uploaded-prior-to=P7D",
-        ])
-    
-    command.extend([
-        "--platform",
-        "any",
-        "-t",
-        str(destination),
-        "-r",
-        str(requirements),
-        "--no-compile",
-        # We use --no-deps because we want to ensure that dependencies are provided.
-        # This includes all dependencies recursively up the chain.
-        "--no-deps"
-    ])
+        command.extend(
+            [
+                "--only-binary=:all:",
+                "--uploaded-prior-to=P7D",
+            ]
+        )
+
+    command.extend(
+        [
+            "--platform",
+            "any",
+            "-t",
+            str(destination),
+            "-r",
+            str(requirements),
+            "--no-compile",
+            # We use --no-deps because we want to ensure that dependencies are provided.
+            # This includes all dependencies recursively up the chain.
+            "--no-deps",
+        ]
+    )
     run(command, working_directory=None)
 
 
@@ -148,23 +154,29 @@ def detect_vendored_libs(destination: Path, files_to_skip: List[str]) -> List[st
     return retval
 
 
-def _apply_patch(patch_file_path: Path, working_directory: Path, ignore_space_change=False) -> None:
+def _apply_patch(
+    patch_file_path: Path, working_directory: Path, ignore_space_change: bool = False
+) -> None:
     command = ["git", "apply", "--verbose"]
-    
+
     if ignore_space_change:
         command.append("--ignore-space-change")
-        
+
     command.append(str(patch_file_path))
 
     run(command, working_directory=working_directory)
 
 
-def apply_patches(patch_dir: Path, working_directory: Path, ignore_space_change=False) -> None:
+def apply_patches(
+    patch_dir: Path, working_directory: Path, ignore_space_change: bool = False
+) -> None:
     for patch in patch_dir.glob("*.patch"):
         _apply_patch(patch, working_directory, ignore_space_change)
 
 
-def vendor_libraries(config: Configuration, ignore_space_change: bool = False, secured: bool = False) -> List[str]:
+def vendor_libraries(
+    config: Configuration, ignore_space_change: bool = False, secured: bool = False
+) -> List[str]:
     destination = config.destination
 
     # Download the relevant libraries.
@@ -182,7 +194,11 @@ def vendor_libraries(config: Configuration, ignore_space_change: bool = False, s
 
     # Apply user provided patches.
     if config.patches_dir:
-        apply_patches(config.patches_dir, working_directory=config.base_directory, ignore_space_change=ignore_space_change)
+        apply_patches(
+            config.patches_dir,
+            working_directory=config.base_directory,
+            ignore_space_change=ignore_space_change,
+        )
 
     # Rewrite the imports we want changed.
     rewrite_imports(

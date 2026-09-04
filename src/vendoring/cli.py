@@ -29,8 +29,18 @@ class _Template(NamedTuple):
 template = _Template(
     package=click.argument("package", default=None, required=False, type=str),
     verbose=click.option("-v", "--verbose", is_flag=True),
-    ignore_space_change=click.option("--ignore-space-change", is_flag=True, default=False),
-    secured=click.option("--secured", is_flag=True, default=False, help="Use security-focused pip install flags (--only-binary=:all: and --uploaded-prior-to=P7D)")
+    ignore_space_change=click.option(
+        "--ignore-space-change",
+        is_flag=True,
+        default=False,
+        help="Ignore spaces when applying patches",
+    ),
+    secured=click.option(
+        "--secured",
+        is_flag=True,
+        default=False,
+        help="Use security-focused pip install flags (--only-binary=:all: and --uploaded-prior-to=P7D)",
+    ),
 )
 
 
