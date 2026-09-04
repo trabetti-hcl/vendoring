@@ -19,6 +19,7 @@ def download_libraries(requirements: Path, destination: Path) -> None:
         "install",
         "--only-binary=:all:",
         "--uploaded-prior-to=P7D",
+        "--require-hashes",
         "--platform",
         "any",
         "-t",
